@@ -1,1 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Housing Price Prediction</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin:20px 0 0 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
 
+        h1 {
+            color: #333;
+        }
+
+        div {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input {
+            width: 200px;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #linearresult {
+            font-size: 18px;
+            margin-top: 10px;
+            color: #333;
+        }
+        #randomresult {
+            font-size: 18px;
+            margin-top: 10px;
+            color: #333;
+        }
+        #OrignalValue {
+            font-size: 18px;
+            margin-top: 10px;
+            color: #333;
+        }
+        img{
+            border-radius: 30%;
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="img">
+    <img src="OIP.jpg" alt="image">
+    </div>
+    <h1>Housing Price Prediction</h1>
+    <div>
+        <label for="LSTAT">LSTAT:</label>
+        <input type="text" id="LSTAT" placeholder="Enter LSTAT">
+    </div>
+    <div>
+        <label for="RM">RM:</label>
+        <input type="text" id="RM" placeholder="Enter RM">
+    </div>
+    <div>
+        <label for="PTRATIO">PTRATIO:</label>
+        <input type="text" id="PTRATIO" placeholder="Enter PTRATIO">
+    </div>
+    <div>
+        <label for="INDUS">INDUS:</label>
+        <input type="text" id="INDUS" placeholder="Enter INDUS">
+    </div>
+    <div>
+        <label for="TAX">TAX:</label>
+        <input type="text" id="TAX" placeholder="Enter TAX">
+    </div>
+    <button onclick="predictPrice()">Predict Price</button>
+    <div id="OrignalValue"></div>
+    <div id="LinearResult"></div>
+    <div id="RandomResult"></div>
+
+    <script>
+        function predictPrice() {
+            var LSTAT = document.getElementById('LSTAT').value;
+            var RM = document.getElementById('RM').value;
+            var PTRATIO = document.getElementById('PTRATIO').value;
+            var INDUS = document.getElementById('INDUS').value;
+            var TAX = document.getElementById('TAX').value;
+
+            var requestData = {
+                LSTAT: parseFloat(LSTAT),
+                RM: parseFloat(RM),
+                PTRATIO: parseFloat(PTRATIO),
+                INDUS: parseFloat(INDUS),
+                TAX: parseFloat(TAX)
+            };
+
+            fetch('http://localhost:5000/predict_price', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('RandomResult').innerText = 'Predicted Price using Random Forest: $' + data.rfp[0].toFixed(2);
+                document.getElementById('LinearResult').innerText = 'Predicted Price using Linear Regression: $' + data.lrp[0].toFixed(2);
+                document.getElementById('OrignalValue').innerText = 'Original Value: $' + data.org;
+                var resultElement=document.getElementById('RandomResult');
+                if (resultElement) {
+                resultElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

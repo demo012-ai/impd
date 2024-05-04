@@ -10,30 +10,30 @@ from sklearn.ensemble import RandomForestRegressor
 app = Flask(__name__)
 CORS(app)
 # Load the dataset and preprocess as needed
-dataset_path = "D:\\datasets\\boston_housing\\HousingData.csv"
-housing_data = pd.read_csv(dataset_path)
-housing_data = housing_data.dropna(axis=0, how='any')
+# dataset_path = "D:\\datasets\\boston_housing\\HousingData.csv"
+# housing_data = pd.read_csv(dataset_path)
+# housing_data = housing_data.dropna(axis=0, how='any')
 
 # Selecting relevant features
-selected_features = ['LSTAT', 'RM', 'PTRATIO', 'INDUS', 'TAX', 'MEDV']
-data_subset = housing_data[selected_features]
+# selected_features = ['LSTAT', 'RM', 'PTRATIO', 'INDUS', 'TAX', 'MEDV']
+# data_subset = housing_data[selected_features]
 
 # Splitting the data
-x = data_subset[['LSTAT', 'RM', 'PTRATIO', 'INDUS', 'TAX']]
-y = data_subset['MEDV']
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=0)
+# x = data_subset[['LSTAT', 'RM', 'PTRATIO', 'INDUS', 'TAX']]
+# y = data_subset['MEDV']
+# x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=0)
 
 # Training the model (you may want to consider loading a pre-trained model)
-regressor = LinearRegression()
-regressor.fit(x_train, y_train)
-rf=RandomForestRegressor()
-rf.fit(x_train,y_train)
+# regressor = LinearRegression()
+# regressor.fit(x_train, y_train)
+# rf=RandomForestRegressor()
+# rf.fit(x_train,y_train)
 
 # Save the trained model to a file
 model_filename = 'LinearRegression_trained_model.joblib'
-joblib.dump(regressor, model_filename)
+# joblib.dump(regressor, model_filename)
 model_filename1 = 'RandomForest_trained_model.joblib'
-joblib.dump(rf, model_filename1)
+# joblib.dump(rf, model_filename1)
 @app.route('/')
 def index():
     return render_template('index.html')
